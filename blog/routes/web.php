@@ -1,6 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\MainController;
+use App\Http\Controllers\AuthController;
 
 /*
 |--------------------------------------------------------------------------
@@ -12,6 +14,15 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
+//Auth
+Route::get('signin', [AuthController::calss, 'signin']);
+
+
+//MAin
+Route::get('main', [MainController::class, 'index']);
+Route::get('gallery/{img}', [MainController::class, 'show']);
+
 
 Route::get('/', function () {
     return view('layout');
