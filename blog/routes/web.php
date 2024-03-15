@@ -17,6 +17,7 @@ use App\Http\Controllers\AuthController;
 
 //Auth
 Route::get('signin', [AuthController::class, 'signin']);
+Route::post('register', [AuthController::class, 'register']);
 
 //Main
 Route::get('main', [MainController::class, 'index']);

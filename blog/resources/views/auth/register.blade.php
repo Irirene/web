@@ -1,6 +1,7 @@
 @extends('layout')
 @section('content')
-<form action="/registr" method="post">
+<form action="/register" method="post">
+  @csrf
 <div class="form-group">
     <label for="name">Name</label>
     <input type="text" class="form-control" id="name" name="name">
