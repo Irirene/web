@@ -46,14 +46,14 @@
     </ul>
     <div class="form-inline my-2 my-lg-0">
       <a href="/signin" class="btn btn-outline-success my-2 mr-2 my-sm-0" >Sign In</a>
-      <a href="/signup" class="btn btn-outline-success my-2 my-sm-0" >Sign Up</a>
+      <a href="/signup" class="btn btn-outline-success my-2 my-sm-0">Sign Up</a>
 </div>
   </div>
 </nav>
     </header>
     <main>
       <div class="container">
-      @yield('content')
+        @yield('content')
       </div>
     </main>
   </body>

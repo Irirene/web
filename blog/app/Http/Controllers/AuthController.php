@@ -7,6 +7,6 @@ use Illuminate\Http\Request;
 class AuthController extends Controller
 {
     function signin(){
-        return view('auth.registr');
+        return view('auth.register');
     }
 }

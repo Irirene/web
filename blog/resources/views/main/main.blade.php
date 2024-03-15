@@ -1,10 +1,9 @@
-@extends('layout')
+@extends ('layout')
 @section('content')
-
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Data</th>
+      <th scope="col">Date</th>
       <th scope="col">Name</th>
       <th scope="col">ShortDesc</th>
       <th scope="col">Desc</th>
@@ -16,12 +15,11 @@
     <tr>
       <th scope="row">{{$article->date}}</th>
       <td>{{$article->name}}</td>
-      <td>{{$article->desc}}</td>
       <td>{{$article->shortDesc}}</td>
-      <td><a href="gallery/{{$article->full_image}}"><img scr="{{URL::asset($article->preview_image)}}"></a></td>
+      <td>{{$article->desc}}</td>
+      <td><a href="gallery/{{$article->full_image}}"><img src="{{URL::asset($article->preview_image)}}" alt="" width="70" heght="65"></a></td>
     </tr>
     @endforeach
   </tbody>
 </table>
-
 @endsection

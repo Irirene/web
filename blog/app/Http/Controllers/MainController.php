@@ -7,11 +7,11 @@ use Illuminate\Http\Request;
 class MainController extends Controller
 {
     function index(){
-        $articles = json_decode(file_get_contents(public_path().'/article.json'));
+        $articles = json_decode(file_get_contents(public_path().'/articles.json'));
         return view('main.main', ['articles'=>$articles]);
     }
 
     function show($img){
-        return view('main.gallery', ['img'=>$imgs]);
+        return view('main.gallery', ['img'=>$img]);
     }
 }

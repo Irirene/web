@@ -16,13 +16,11 @@ use App\Http\Controllers\AuthController;
 */
 
 //Auth
-Route::get('signin', [AuthController::calss, 'signin']);
+Route::get('signin', [AuthController::class, 'signin']);
 
-
-//MAin
+//Main
 Route::get('main', [MainController::class, 'index']);
 Route::get('gallery/{img}', [MainController::class, 'show']);
-
 
 Route::get('/', function () {
     return view('layout');

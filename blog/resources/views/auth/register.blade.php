@@ -1,7 +1,7 @@
 @extends('layout')
-@section('container')
-<form action="/registr" method="">
-  <div class="form-group">
+@section('content')
+<form action="/registr" method="post">
+<div class="form-group">
     <label for="name">Name</label>
     <input type="text" class="form-control" id="name" name="name">
   </div>
