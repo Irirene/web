@@ -22,4 +22,6 @@ class CommentController extends Controller
         $comment->save();
         return redirect()->route('article.show', ['article'=>$request->article_id]);
     }
+
+    
 }
