@@ -14,7 +14,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(UserSeeder::class);
+        
         Article::factory(10)->has(Comment::factory(3))->create();
+
         // \App\Models\User::factory(10)->create();
 
         // \App\Models\User::factory()->create([

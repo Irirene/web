@@ -18,17 +18,25 @@ use App\Http\Controllers\CommentController;
 */
 //comment
 Route::controller(CommentController::class)->group(function(){
-    Route::post('/comment', 'store');
+    Route::get('/comment/index', 'index');
+    Route::post('/comment', 'store')->middleware('auth:sanctum');
+    Route::get('/comment/{comment}/edit', 'edit');
+    Route::get('/comment/{comment}/delete', 'delete');
+    Route::get('/comment/{comment}', 'update');
+    Route::get('/comment/{comment}/accept', 'accept');
+    Route::get('/comment/{comment}/reject', 'reject');
+    
 });
 
-//artiiecle
-Route::resource('article', ArticleController::class);
+//artiecle
+Route::resource('article', ArticleController::class)->middleware('auth:sanctum');
 
 //Auth
 Route::get('signin', [AuthController::class, 'signin']);
 Route::post('register', [AuthController::class, 'register']);
 Route::get('signup', [AuthController::class, 'signup'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
+Route::get('logout', [AuthController::class, 'logout']);
 
 //Main
 Route::get('main', [MainController::class, 'index']);
