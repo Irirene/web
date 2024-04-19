@@ -9,11 +9,12 @@ use App\Mail\CommentMail;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use App\Jobs\VeryLongJob;
 
 class CommentController extends Controller
 {
 
-    function index()
+    public function index()
     {
         $comments = DB::table('comments')
         ->join('articles', 'articles.id', 'comments.article_id')
@@ -24,7 +25,7 @@ class CommentController extends Controller
     }
 
 
-    function store(Request $request){
+    public function store(Request $request){
         $request->validate([
             'title'=> 'required|min:5',
             'desc'=> 'required',
@@ -38,17 +39,17 @@ class CommentController extends Controller
         $comment->user_id = auth()->id();
         $comment->article_id = $request->article_id;
         $res = $comment->save();
-        if ($res) Mail::to('iraandieva7@mail.ru')->send(new CommentMail($comment, $article));
-        return redirect()->route('article.show', ['article'=>$request->article_id]);
+        if ($res) VeryLongJob::dispatch($comment, $article);
+        return redirect()->route('article.show', ['article'=>$request->article_id])->with(['res'=>$res]);
     }
     
-    function edit(Comment $comment)
+    public function edit(Comment $comment)
     {
         Gate::authorize('comment', ['comment'=>$comment]);
         return view('comment.edit', ['comment'=>$comment]);
     }
 
-    function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment)
     {
         $request->validate([
             'title' => 'required|min:6',
@@ -63,10 +64,23 @@ class CommentController extends Controller
         return redirect()->route('article.show', ['article'=>$request->article_id]);
     }
 
-    function destroy(Comment $comment)
+    public function delete(Comment $comment)
     {
         Gate::authorize('comment', ['comment'=>$comment]);
         $comment->delete();
         return redirect()->route('article.show', ['article'=>1]);
     }
+
+    public function accept(Comment $comment){
+        $comment->accept = true;
+        $comment->save();
+        return redirect()->route('comment.index');      
+    }
+
+    public function reject(Comment $comment){
+        $comment->accept = false;
+        $comment->save();
+        return redirect()->route('comment.index');      
+    }
+
 }

@@ -18,7 +18,7 @@ use App\Http\Controllers\CommentController;
 */
 //comment
 Route::controller(CommentController::class)->group(function(){
-    Route::get('/comment/index', 'index');
+    Route::get('/comment/index', 'index')->name('comment.index');
     Route::post('/comment', 'store')->middleware('auth:sanctum');
     Route::get('/comment/{comment}/edit', 'edit');
     Route::get('/comment/{comment}/delete', 'delete');

@@ -54,7 +54,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $comments = Comment::where('article_id', $article->id)->latest()->get();
+        $comments = Comment::where('article_id', $article->id)->where('accept', true)->latest()->get();//del
         return view('article.show', ['article'=>$article, 'comments'=>$comments]);
     }
 

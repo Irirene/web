@@ -18,9 +18,11 @@
       <td>{{$comment->desc}}</td>
       <td><a href="/article/{{$comment->article_id}}">{{$comment->article}}</a></td>
       <td>{{$comment->name}}</td>
-      <td>
-        <a class="btn-success" href="/comment/{{$comment->id}}/accept">Accept</a>
-        <a class="btn-warning" href="/comment/{{$comment->id}}/reject">Reject</a>
+      <td>@if (!$comment->accept)
+        <a class="btn btn-success" href="/comment/{{$comment->id}}/accept">Accept</a>
+        @else
+        <a class="btn btn-warning" href="/comment/{{$comment->id}}/reject">Reject</a>
+        @endif
     </td>
     </tr>
     @endforeach
