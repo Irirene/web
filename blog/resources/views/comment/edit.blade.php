@@ -11,8 +11,7 @@
 </div>
 @endif
 
-<form action="/comment/{{$comment->id}}" method="post">
-  @METHOD('PUT')
+<form action="/comment/{{$comment->id}}/update" method="post">
   @csrf
   <div class="form-group">
     <label for="name">Title</label>
@@ -22,6 +21,7 @@
     <label for="text">Text</label>
     <textarea name="desc" id="desc" cols="148" rows="5">{{$comment->desc}}</textarea>
   </div>
+  <input type="hidden" name="article_id" value="{{$comment->article_id}}">
   <button type="submit" class="btn btn-primary">Update</button>
 </form>
 

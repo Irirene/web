@@ -54,7 +54,7 @@ class ArticleController extends Controller
      */
     public function show(Article $article)
     {
-        $comments = Comment::where('article_id', $article->id)->where('accept', true)->latest()->get();//del
+        $comments = Comment::where('article_id', $article->id)->where('accept', true)->latest()->get();
         return view('article.show', ['article'=>$article, 'comments'=>$comments]);
     }
 
@@ -94,7 +94,11 @@ class ArticleController extends Controller
     public function destroy(Article $article)
     {
         Gate::authorize('create', [self::class]);
+        $comments = Comment::where('article_id', $article->id)->latest()->get();
         $article->delete();
+        foreach ($comments as $comment){
+            $comment->delete();
+        }
         return redirect()->route('article.index');
     }
 }

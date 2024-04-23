@@ -53,7 +53,8 @@ class CommentController extends Controller
     {
         $request->validate([
             'title' => 'required|min:6',
-            'desc' => 'required'
+            'desc' => 'required',
+            'article_id' => 'required',
         ]);
 
         $comment->title = $request->title;
@@ -68,7 +69,7 @@ class CommentController extends Controller
     {
         Gate::authorize('comment', ['comment'=>$comment]);
         $comment->delete();
-        return redirect()->route('article.show', ['article'=>1]);
+        return redirect()->route('article.show', ['article'=>$comment->article_id]);
     }
 
     public function accept(Comment $comment){

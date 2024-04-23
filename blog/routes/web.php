@@ -22,7 +22,7 @@ Route::controller(CommentController::class)->group(function(){
     Route::post('/comment', 'store')->middleware('auth:sanctum');
     Route::get('/comment/{comment}/edit', 'edit');
     Route::get('/comment/{comment}/delete', 'delete');
-    Route::get('/comment/{comment}', 'update');
+    Route::post('/comment/{comment}/update', 'update');
     Route::get('/comment/{comment}/accept', 'accept');
     Route::get('/comment/{comment}/reject', 'reject');
     
