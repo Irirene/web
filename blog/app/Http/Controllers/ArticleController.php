@@ -6,6 +6,7 @@ use App\Models\Article;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use App\Events\ArticleEvent;
 
 class ArticleController extends Controller
 {
@@ -45,7 +46,8 @@ class ArticleController extends Controller
         $article->shortDesc = $request->shortDesc;
         $article->text = $request->text;
         $article->user_id = 1;
-        $article->save();
+        $res = $article->save();
+        if ($res) ArticleEvent::dispatch($article);
         return redirect()->route('article.index');
     }
 
