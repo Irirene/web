@@ -10,6 +10,7 @@ use App\Mail\CommentMail;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Notification;
 use App\Jobs\VeryLongJob;
 //use Illuminate\Notifications\Notification;
@@ -20,16 +21,21 @@ class CommentController extends Controller
 
     public function index()
     {
-        $comments = DB::table('comments')
-        ->join('articles', 'articles.id', 'comments.article_id')
-        ->join('users', 'users.id', 'comments.user_id')
-        ->select('comments.*', 'articles.id as article_id', 'articles.title as article', 'users.name')
-        ->get();
+        $comments = Cache::rememberForever('comments', function(){
+            return 
+            DB::table('comments')
+            ->join('articles', 'articles.id', 'comments.article_id')
+            ->join('users', 'users.id', 'comments.user_id')
+            ->select('comments.*', 'articles.id as article_id', 'articles.title as article', 'users.name')
+            ->get();
+        });
         return view('comment.index', ['comments'=>$comments]);
     }
 
 
     public function store(Request $request){
+        Cache::forget('comments');
+
         $request->validate([
             'title'=> 'required|min:5',
             'desc'=> 'required',
@@ -46,8 +52,7 @@ class CommentController extends Controller
         $comment->article_id = $request->article_id;
         $res = $comment->save();
         if ($res) {
-            VeryLongJob::dispatch($comment, $article);
-            Notification::send($users, new CommentNotify($comment->title));
+            VeryLongJob::dispatch($comment, $article);            
         }
         return redirect()->route('article.show', ['article'=>$request->article_id])->with(['res'=>$res]);
     }
@@ -60,6 +65,8 @@ class CommentController extends Controller
 
     public function update(Request $request, Comment $comment)
     {
+        Cache::forget('comments');
+        Cache::forget('article_comment'.$comment->article_id);
         $request->validate([
             'title' => 'required|min:6',
             'desc' => 'required',
@@ -68,7 +75,7 @@ class CommentController extends Controller
 
         $comment->title = $request->title;
         $comment->desc = $request->desc;
-        $comment->user_id = 1;
+        $comment->user_id = $request->user_id;
         $comment->article_id = $request->article_id;
         $comment->save();
         return redirect()->route('article.show', ['article'=>$request->article_id]);
@@ -76,20 +83,29 @@ class CommentController extends Controller
 
     public function delete(Comment $comment)
     {
+        Cache::forget('comments');
+        Cache::forget('article_comment'.$comment->article_id);
+
         Gate::authorize('comment', ['comment'=>$comment]);
         $comment->delete();
         return redirect()->route('article.show', ['article'=>$comment->article_id]);
     }
 
     public function accept(Comment $comment){
+        Cache::forget('comments');
+        Cache::forget('article_comment'.$comment->article_id);
+
         $comment->accept = true;
-        $users = User::where('id', '!=', auth()->id())->get();
+        $users = User::where('id', '!=', $comment->user_id)->get();
         $res = $comment->save();
         if ($res) Notification::send($users, new CommentNotify($comment->title, $comment->article_id));
         return redirect()->route('comment.index');      
     }
 
     public function reject(Comment $comment){
+        Cache::forget('comments');
+        Cache::forget('article_comment'.$comment->article_id);
+
         $comment->accept = false;
         $comment->save();
         return redirect()->route('comment.index');      

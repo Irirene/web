@@ -46,7 +46,7 @@
         </a>
         <div class="dropdown-menu">
           @foreach(auth()->user()->unreadNotifications as $notify)
-          <a class="dropdown-item" href="{{route('article.show', ['article'=>$notify->data['idArticle']])}}">{{$notify->data['titleComment']}}</a>
+          <a class="dropdown-item" href="{{route('article.show', ['article'=>$notify->data['idArticle'], 'id_notify'=>$notify->id])}}">{{$notify->data['titleComment']}}</a>
           @endforeach
         </div>
       </li>

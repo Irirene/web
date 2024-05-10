@@ -22,6 +22,7 @@
     <textarea name="desc" id="desc" cols="148" rows="5">{{$comment->desc}}</textarea>
   </div>
   <input type="hidden" name="article_id" value="{{$comment->article_id}}">
+  <input type="hidden" name="user_id" value="{{$comment->user_id}}">
   <button type="submit" class="btn btn-primary">Update</button>
 </form>
 
