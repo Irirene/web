@@ -2,6 +2,9 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\CommentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -13,6 +16,26 @@ use Illuminate\Support\Facades\Route;
 | be assigned to the "api" middleware group. Make something great!
 |
 */
+Route::controller(CommentController::class)->group(function(){
+    Route::get('/comment/index', 'index')->name('comment.index');
+    Route::post('/comment', 'store')->middleware('auth:sanctum');
+    Route::get('/comment/{comment}/delete', 'delete');
+    Route::post('/comment/{comment}/update', 'update');
+    Route::get('/comment/{comment}/accept', 'accept');
+    Route::get('/comment/{comment}/reject', 'reject');
+    
+});
+
+//artiecle
+Route::resource('article', ArticleController::class)->middleware('auth:sanctum');
+
+
+//Auth
+// Route::get('signin', [AuthController::class, 'signin']);
+Route::post('register', [AuthController::class, 'register']);
+// Route::get('signup', [AuthController::class, 'signup'])->name('login');
+Route::post('login', [AuthController::class, 'login']);
+Route::get('logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

@@ -27,7 +27,8 @@ class AuthController extends Controller
             'password'=> Hash::make($request->password),
         ]);
 
-        $user->createToken('MyAppToken');
+        $token = $user->createToken('MyAppToken');
+        if (request()->expectsJson()) return response()->json($token);
         return redirect()->route('login');
     }
 
@@ -43,6 +44,9 @@ class AuthController extends Controller
 
         if(Auth::attempt($credentials)){
             $request->session()->regenerate();
+            $token = $request->user()->createToken('MyAppToken');
+            if (request()->expectsJson()) return response()->json($token);
+            
             return redirect()->intended('/article');
         }
         return back()->withErrors([
@@ -52,6 +56,10 @@ class AuthController extends Controller
 
     function logout(Request $request){
         Auth::logout();
+        if (request()->expectsJson()){
+            auth()->user()->tokens()-delete();
+            return response()->json('logout');
+        }
         $request->session()->invalidate();
         $request->session()->regenerateToken();
         return redirect()->route('article.index');

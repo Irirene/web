@@ -30,6 +30,7 @@ Route::controller(CommentController::class)->group(function(){
 
 //artiecle
 Route::resource('article', ArticleController::class)->middleware('auth:sanctum');
+Route::get('article/{article}', [ArticleController::class, 'show'])->name('article.show')->middleware('auth:sanctum', 'stat');
 
 //Auth
 Route::get('signin', [AuthController::class, 'signin']);

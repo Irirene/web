@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Notification;
 use App\Jobs\VeryLongJob;
 //use Illuminate\Notifications\Notification;
 use App\Notifications\CommentNotify;
-
+ 
 class CommentController extends Controller
 {
 
