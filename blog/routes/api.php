@@ -27,7 +27,7 @@ Route::controller(CommentController::class)->group(function(){
 });
 
 //artiecle
-Route::resource('article', ArticleController::class)->middleware('auth:sanctum');
+Route::resource('article', ArticleController::class); //->middleware('auth:sanctum');
 
 
 //Auth
