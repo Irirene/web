@@ -20,14 +20,14 @@ Route::controller(CommentController::class)->group(function(){
     Route::get('/comment/index', 'index')->name('comment.index');
     Route::post('/comment', 'store')->middleware('auth:sanctum');
     Route::get('/comment/{comment}/delete', 'delete');
-    Route::post('/comment/{comment}/update', 'update');
+    Route::put('/comment/{comment}/update', 'update');
     Route::get('/comment/{comment}/accept', 'accept');
     Route::get('/comment/{comment}/reject', 'reject');
     
 });
 
 //artiecle
-Route::resource('article', ArticleController::class); //->middleware('auth:sanctum');
+Route::resource('article', ArticleController::class)->middleware('auth:sanctum');
 
 
 //Auth

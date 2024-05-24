@@ -12,6 +12,7 @@
 @endif
 
 <form action="/comment/{{$comment->id}}/update" method="post">
+  @METHOD('PUT')
   @csrf
   <div class="form-group">
     <label for="name">Title</label>

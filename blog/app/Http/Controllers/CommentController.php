@@ -29,6 +29,7 @@ class CommentController extends Controller
             ->select('comments.*', 'articles.id as article_id', 'articles.title as article', 'users.name')
             ->get();
         });
+        if(request()->expectsJson()) return response()->json(['comments'=>$comments]);
         return view('comment.index', ['comments'=>$comments]);
     }
 
@@ -54,6 +55,7 @@ class CommentController extends Controller
         if ($res) {
             VeryLongJob::dispatch($comment, $article);            
         }
+        if(request()->expectsJson()) return response()->json($res);
         return redirect()->route('article.show', ['article'=>$request->article_id])->with(['res'=>$res]);
     }
     
@@ -98,6 +100,7 @@ class CommentController extends Controller
         $comment->accept = true;
         $users = User::where('id', '!=', $comment->user_id)->get();
         $res = $comment->save();
+        if(request()->expectsJson()) return response()->json($res);
         if ($res) Notification::send($users, new CommentNotify($comment->title, $comment->article_id));
         return redirect()->route('comment.index');      
     }
@@ -107,7 +110,8 @@ class CommentController extends Controller
         Cache::forget('article_comment'.$comment->article_id);
 
         $comment->accept = false;
-        $comment->save();
+        $res = $comment->save();
+        if(request()->expectsJson()) return response()->json($res); 
         return redirect()->route('comment.index');      
     }
 

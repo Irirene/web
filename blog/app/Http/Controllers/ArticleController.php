@@ -57,9 +57,11 @@ class ArticleController extends Controller
         $article->title = $request->title;
         $article->shortDesc = $request->shortDesc;
         $article->text = $request->text;
-        $article->user_id = 1;
+        $article->user_id = auth()->id();
         $res = $article->save();
+        
         if ($res) ArticleEvent::dispatch($article);
+        if(request()->expectsJson()) return response()->json($res);
         return redirect()->route('article.index');
     }
 
@@ -75,7 +77,8 @@ class ArticleController extends Controller
         $comments = Cache::rememberForever('article_comment'.$article->id, function()use ($article){
             return Comment::where('article_id', $article->id)->where('accept', true)->latest()->get();
         });
-
+        
+        if(request()->expectsJson()) return response()->json(['article'=>$article, 'comments'=>$comments]);
         return view('article.show', ['article'=>$article, 'comments'=>$comments]);
     }
 
@@ -113,7 +116,8 @@ class ArticleController extends Controller
         $article->shortDesc = $request->shortDesc;
         $article->text = $request->text;
         $article->user_id = 1;
-        $article->save();
+        $res = $article->save();
+        if(request()->expectsJson()) return response()->json($res);
         return redirect()->route('article.show', ['article'=>$article->id]);
     }
 
@@ -125,10 +129,12 @@ class ArticleController extends Controller
         Cache::flush();
         Gate::authorize('create', [self::class]);
         $comments = Comment::where('article_id', $article->id)->latest()->get();
-        $article->delete();
+        
         foreach ($comments as $comment){
             $comment->delete();
         }
+        $res = $article->delete();
+        if (request()->expectsJson()) return response()->json($res);
         return redirect()->route('article.index');
     }
 }
